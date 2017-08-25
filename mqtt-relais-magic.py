@@ -166,24 +166,13 @@ def main():
     GPIO.setup(11, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     
     last_state = None
+    last_timestamp = time()
 
     # loop forever
     for i in itertools.count():
-        time.sleep(1)
-        
-        # Clubstatus
-        state = not bool(GPIO.input(7))
+        sleep(1)
 
-        if state != last_state or i % 10 == 0:
-            client.publish("/public/eden/clubstatus", int(state))
-        last_state = state
-
-        if state:
-            last_clubstatus = int(time.time())
-
-        clubstatus = state
-        
-        # Schloss
+        clubstatus = not bool(GPIO.input(7))
         schlossstatus = bool(GPIO.input(11))
 
         if clubstatus != last_state or i % 10 == 0:
