@@ -17,7 +17,7 @@ last_clubstatus = 0
 stromstatus = False
 
 
-class Relay:
+class Relay(object):
     global bus
 
     def __init__(self):
@@ -132,7 +132,7 @@ def main():
     config = configparser.ConfigParser()
     config['mqtt'] = {'host': 'localhost', 'port': 1883, 'auth': 'no'}
     config.read(path + '/configuration.ini')
-    
+
     # init relay
     bus = smbus.SMBus(1)
     relay = Relay()
@@ -146,7 +146,7 @@ def main():
             client.loop_stop()
         finally:
             sys.exit()
-    
+
     signal.signal(signal.SIGINT, end_process)
 
     # connect to MQTT
@@ -156,15 +156,15 @@ def main():
 
     client.connect(config.get('mqtt', 'host'), config.getint('mqtt', 'port'), 60)
     client.loop_start()
-    
+
     # setup GPIO pins
     #
     # pin 7 (GPIO  4): clubstatus, high == off, low == on
     # pin 11 (GPIO 17: state of lock, high == locked, low == unlocked
-    GPIO.setmode(GPIO.BOARD) 
+    GPIO.setmode(GPIO.BOARD)
     GPIO.setup(7, GPIO.IN)
     GPIO.setup(11, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    
+
     last_state = None
     last_timestamp = time()
 
