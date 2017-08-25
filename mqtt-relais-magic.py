@@ -102,17 +102,28 @@ class Relay:
         self.red(red)
         self.yellow(yellow)
         self.green(green)
-        return self.__get_trafficlight_state__(red=red, yellow=yellow, green=green)
 
-    def __get_trafficlight_state__(self, **kwargs):
+    def __get_trafficlight_state__(self):
+        """
+        :return: Colours that are on
+        :rtype: str
+        """
+        relais_state = self.state
         light_state = ""
-        for argument in kwargs.keys():
+        for colour in relais_state.keys():
             if light_state:
                 light_state += "-"
-            if kwargs[argument]:
-                light_state += argument
+            if relais_state[colour]:
+                light_state += colour
+
+        if light_state == "":
+            light_state = "Undefined"
 
         return light_state
+
+    def __str__(self):
+        self.__get_trafficlight_state__()
+
 
 def main():
     path = os.path.dirname(os.path.realpath(__file__))
