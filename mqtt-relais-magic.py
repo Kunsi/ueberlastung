@@ -24,12 +24,10 @@ class Relay:
         self.DEVICE_REG_MODE1 = 0x06
         self.DEVICE_REG_DATA = 0xff
         bus.write_byte_data(self.DEVICE_ADDRESS, self.DEVICE_REG_MODE1, self.DEVICE_REG_DATA)
-        self.state = {
-                        "red": False,
-                        "yellow": False,
-                        "green": False,
-                        "power": False
-                    }
+        self.red = False
+        self.yellow = False
+        self.green = False
+        self.power = False
 
     def __set_relay__(self, relay, state):
         """ Set the relay state
@@ -48,41 +46,41 @@ class Relay:
             self.DEVICE_REG_DATA |= (0x1 << relay)
             bus.write_byte_data(self.DEVICE_ADDRESS, self.DEVICE_REG_MODE1, self.DEVICE_REG_DATA)
 
-    def strom(self, state):
+    def set_power(self, state):
         """
         :param state: Target state for the power switch
         :type state: bool
         :return: None
         """
         self.__set_relay__(0, state)
-        self.state["power"] = state
+        self.power = state
 
-    def red(self, state):
+    def set_red(self, state):
         """
         :param state: Target state for the red light switch
         :type state: bool
         :return: None
         """
         self.__set_relay__(2, state)
-        self.state["red"] = state
+        self.red = state
 
-    def yellow(self, state):
+    def set_yellow(self, state):
         """
         :param state: Target state for the yellow light switch
         :type state: bool
         :return: None
         """
         self.__set_relay__(1, state)
-        self.state["yellow"] = state
+        self.yellow = state
 
-    def green(self, state):
+    def set_green(self, state):
         """
         :param state: Target state for the green light switch
         :type state: bool
         :return: None
         """
         self.__set_relay__(3, state)
-        self.state["green"] = state
+        self.green = state
 
     def set_trafficlight(self, red=False, yellow=False, green=False):
         """
@@ -95,16 +93,21 @@ class Relay:
         :type green: bool
         :return: None
         """
-        self.red(red)
-        self.yellow(yellow)
-        self.green(green)
+        self.set_red(red)
+        self.set_yellow(yellow)
+        self.set_green(green)
 
     def __get_trafficlight_state__(self):
         """
         :return: Colours that are on
         :rtype: str
         """
-        relais_state = self.state
+        relais_state = {
+            "red": self.red,
+            "yellow": self.yellow,
+            "green": self.green
+        }
+
         light_state = ""
         for colour in relais_state.keys():
             if light_state:
