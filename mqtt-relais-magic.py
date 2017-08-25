@@ -186,38 +186,42 @@ def main():
         # Schloss
         schlossstatus = bool(GPIO.input(11))
 
-        # Strom
-        if last_clubstatus > (int(time.time())-20) \
-                and not relay.state["power"]:
-            relay.strom(True)
+        if clubstatus != last_state or i % 10 == 0:
+            client.publish("/public/eden/clubstatus", int(clubstatus))
+        last_state = clubstatus
 
-        if last_clubstatus < (int(time.time())-20) \
-                and relay.state["power"]:
-            relay.strom(False)
+        if clubstatus:
+            last_timestamp = int(time())
+
+        if not (time() - last_timestamp < 20
+                and relay.power):
+            relay.set_power(True)
+        else:
+            relay.set_power(False)
 
         # Ampel
         
         # Club ist offen, Schloss ist offen -> Gruen
         if clubstatus \
-                and not relay.state["power"] \
+                and not relay.power \
                 and str(relay) != 'green':
             relay.set_trafficlight(green=True)
 
         # Club ist zu, Schloss ist offen -> Gelb
         elif not clubstatus \
-                and not relay.state["power"] \
+                and not relay.power \
                 and str(relay) != 'yellow':
             relay.set_trafficlight(yellow=True)
 
         # Club ist offen, Schloss ist zu -> Gelb-Rot
         elif clubstatus \
-                and relay.state["power"] \
+                and relay.power \
                 and str(relay) != 'red-yellow':
             relay.set_trafficlight(red=True, yellow=True)
 
         # everything else -> Rot
         elif not clubstatus \
-                and relay.state["power"] \
+                and relay.power \
                 and str(relay) != 'red':
             relay.set_trafficlight(red=True)
 
@@ -225,8 +229,8 @@ def main():
         print(time.strftime("%Y-%m-%d %H:%M:%S")
               + " | Club: " + str(clubstatus)
               + " - Schloss: " + str(schlossstatus)
-              + " - Strom: " + str(relay.state["power"])
-              + " - Ampel: " + ampel)
+              + " - Strom: " + str(relay.power)
+              + " - Ampel: " + str(relay))
 
 if __name__ == "__main__":
     main()
