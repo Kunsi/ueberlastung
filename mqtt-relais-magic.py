@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-import time
 import smbus2 as smbus
 import signal
 import sys
@@ -9,6 +8,8 @@ import RPi.GPIO as GPIO
 import itertools
 import configparser
 import os
+
+from time import sleep, time, strftime
 
 schlossstatus = False
 clubstatus = False
