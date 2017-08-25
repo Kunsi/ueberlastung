@@ -188,8 +188,6 @@ def main():
         else:
             relay.set_power(False)
 
-        # Ampel
-        
         # Club ist offen, Schloss ist offen -> Gruen
         if clubstatus \
                 and not relay.power \
@@ -215,7 +213,7 @@ def main():
             relay.set_trafficlight(red=True)
 
         # print log
-        print(time.strftime("%Y-%m-%d %H:%M:%S")
+        print(strftime("%Y-%m-%d %H:%M:%S")
               + " | Club: " + str(clubstatus)
               + " - Schloss: " + str(schlossstatus)
               + " - Strom: " + str(relay.power)
