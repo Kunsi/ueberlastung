@@ -52,23 +52,53 @@ class Relay:
             bus.write_byte_data(self.DEVICE_ADDRESS, self.DEVICE_REG_MODE1, self.DEVICE_REG_DATA)
 
     def strom(self, state):
+        """
+        :param state: Target state for the power switch
+        :type state: bool
+        :return: None
+        """
         self.__set_relay__(0, state)
         self.state["power"] = state
 
-    def yellow(self, state):
-        self.__set_relay__(1, state)
 
     def red(self, state):
+        """
+        :param state: Target state for the red light switch
+        :type state: bool
+        :return: None
+        """
         self.__set_relay__(2, state)
         self.state["red"] = state
+
+    def yellow(self, state):
+        """
+        :param state: Target state for the yellow light switch
+        :type state: bool
+        :return: None
+        """
         self.__set_relay__(1, state)
         self.state["yellow"] = state
 
     def green(self, state):
+        """
+        :param state: Target state for the green light switch
+        :type state: bool
+        :return: None
+        """
         self.__set_relay__(3, state)
         self.state["green"] = state
 
     def set_trafficlight(self, red=False, yellow=False, green=False):
+        """
+        Set the trafficlight state
+        :param red: State of the red light
+        :type red: bool
+        :param yellow: State of the yellow light
+        :type yellow: bool
+        :param green: State of the green light
+        :type green: bool
+        :return: None
+        """
         self.red(red)
         self.yellow(yellow)
         self.green(green)
