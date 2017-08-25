@@ -27,6 +27,12 @@ class Relay:
         self.DEVICE_REG_MODE1 = 0x06
         self.DEVICE_REG_DATA = 0xff
         bus.write_byte_data(self.DEVICE_ADDRESS, self.DEVICE_REG_MODE1, self.DEVICE_REG_DATA)
+        self.state = {
+                        "red": False,
+                        "yellow": False,
+                        "green": False,
+                        "power": False
+                    }
 
     def __set_relay__(self, relay, state):
         """ Set the relay state
@@ -47,15 +53,20 @@ class Relay:
 
     def strom(self, state):
         self.__set_relay__(0, state)
+        self.state["power"] = state
 
     def yellow(self, state):
         self.__set_relay__(1, state)
 
     def red(self, state):
         self.__set_relay__(2, state)
+        self.state["red"] = state
+        self.__set_relay__(1, state)
+        self.state["yellow"] = state
 
     def green(self, state):
         self.__set_relay__(3, state)
+        self.state["green"] = state
 
     def set_trafficlight(self, red=False, yellow=False, green=False):
         self.red(red)
