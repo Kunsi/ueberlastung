@@ -138,7 +138,7 @@ def main():
     relay = Relay()
 
     # catch SIGINT
-    def endProcess(signalnum=None, handler=None):
+    def end_process(signalnum=None, handler=None):
         relay.strom(True)
         relay.set_trafficlight(red=True, green=True)
 
@@ -147,7 +147,7 @@ def main():
         finally:
             sys.exit()
     
-    signal.signal(signal.SIGINT, endProcess)
+    signal.signal(signal.SIGINT, end_process)
 
     # connect to MQTT
     client = mqtt.Client()
