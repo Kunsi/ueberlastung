@@ -139,7 +139,7 @@ def main():
 
     # catch SIGINT
     def end_process(signalnum=None, handler=None):
-        relay.strom(True)
+        relay.set_power(True)
         relay.set_trafficlight(red=True, green=True)
 
         try:
