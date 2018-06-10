@@ -49,6 +49,16 @@ enum Log_level {
 class Listener;
 
 
+// TODO: refactor the power timer into its own module.
+/* class PowerTimer {
+	Condition* cnd;
+	
+public:
+	PowerTimer(Condition* cnd);
+	void start();
+}; */
+
+
 class ClubUpdater : public Runnable {
 	TimerCallback<ClubUpdater>* cb;
 	uint8_t regDir0;
@@ -57,7 +67,9 @@ class ClubUpdater : public Runnable {
 	Timer* timer;
 	Mutex mutex;
 	Mutex timerMutex;
+	Condition timerCnd;
 	bool powerTimerActive;
+	bool powerTimerStarted;
 	
 public:
 	void run();
@@ -85,6 +97,7 @@ public:
 	
 	static Condition clubCnd;
 	static Mutex clubCndMutex;
+	static Mutex logMutex;
 	static bool clubChanged ;
 	static bool running;
 	static bool clubIsClosed;
