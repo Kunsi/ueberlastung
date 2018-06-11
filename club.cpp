@@ -211,7 +211,7 @@ void ClubUpdater::updateStatus() {
 		
 		//while (powerTimerActive) { Thread::sleep(500); }
 		
-		Club::log(LOG_INFO, string("ClubUpdater: Finished sleeping."));
+		//Club::log(LOG_INFO, string("ClubUpdater: Finished sleeping."));
 		
 		//timer = new Timer(10 * 1000, 0); // 10 second start interval.
 		try {
@@ -219,7 +219,11 @@ void ClubUpdater::updateStatus() {
 				timer->start(*cb);
 				powerTimerStarted = true;
 			}
-			else { timer->restart(); }
+			else { 
+				//timer->restart(); 
+				timer->stop();
+				timer->start(*cb);
+			}
 		}
 		catch (Poco::IllegalStateException &e) {
 			Club::log(LOG_ERROR, "ClubUpdater: IllegalStateException on timer start: " + e.message());
@@ -263,7 +267,7 @@ void ClubUpdater::updateStatus() {
 		
 		//while (powerTimerActive) { Thread::sleep(500); }
 		
-		Club::log(LOG_INFO, string("ClubUpdater: Finished sleeping."));
+		//Club::log(LOG_INFO, string("ClubUpdater: Finished sleeping."));
 		
 		//timer = new Timer(10 * 1000, 0); // 10 second start interval.
 		//Club::log(LOG_INFO, string("ClubUpdater: Created new timer."));
@@ -272,7 +276,11 @@ void ClubUpdater::updateStatus() {
 				timer->start(*cb);
 				powerTimerStarted = true;
 			}
-			else { timer->restart(); }
+			else { 
+				//timer->restart(); 
+				timer->stop();
+				timer->start(*cb);
+			}
 		}
 		catch (Poco::IllegalStateException &e) {
 			Club::log(LOG_ERROR, "ClubUpdater: IllegalStateException on timer start: " + e.message());
@@ -383,9 +391,13 @@ void ClubUpdater::setPowerState(Timer &t) {
 	
 	writeRelayOutputs();
 	
+	Club::log(LOG_DEBUG, "ClubUpdater: Written relay outputs.");
+	
 	//delete timer;
 	powerTimerActive = false;
 	mutex.unlock();
+	
+	Club::log(LOG_DEBUG, "ClubUpdater: Finished setPowerState.");
 	
 	//timerCnd.signal();
 }
